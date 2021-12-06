@@ -25,24 +25,57 @@ class Day06Solver inherit SolverBase
 
     private method DoEvolution(days as int) as Int64
         var day := 0
+        var count := 0
+        var fishList := List<List<byte>>{}
+        fishList.Add(_Data)
         try
-        do while day < days
-            for var i := 0 to _Data.Count-1
-                var age := _Data[i]
-                if age > 0
-                    _Data[i] := -- age
-                else
-                    _Data[i] := 6
-                    _Data.Add(9)
-                endif
+            do while day < days
+                /*
+                for var i := 0 to _Data.Count-1
+                    var age := _Data[i]
+                    if age > 0
+                        _Data[i] := -- age
+                    else
+                        _Data[i] := 6
+                        if _Data.Count > 100000000
+                            addedFish.Add(9)
+                        else
+                            _Data.Add(9)
+                        endif
+                    endif
+                next
+                */
+                for var i := 0 to fishList.Count-1
+                    for var j := 0 to fishList[i].Count-1
+                        var age := fishList[i][j]
+                        if age > 0
+                            fishList[i][j] := -- age
+                        else
+                            fishList[i][j] := 6
+                            if fishList[i].Count > 10
+                                if fishList.Count == (i + 1) 
+                                    var newList := List<byte>{}
+                                    fishList.Add(newList)
+                                endif
+                                fishList[i+1].Add(9)
+                            else
+                                fishList[i].Add(9)
+                            endif   
+                        endif
+                    next
+                next
+                day ++
+                Console.WriteLine(i"{day} -> {fishList.Count}")
+            end do
+            foreach var fishes in fishList
+                count += fishes:Count
             next
-            day ++
-        end do
         catch ex as exception
+            Console.WriteLine(fishList.Count)
             Console.WriteLine(day)
             Console.WriteLine(ex.Message)
         end try
             
-        return  _Data.Count
+        return  count
 
 end class
