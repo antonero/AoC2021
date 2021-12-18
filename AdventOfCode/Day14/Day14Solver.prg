@@ -22,28 +22,40 @@ class Day14Solver inherit SolverBase
         return
     
     protected override method Solve1() as object
+        return self:SolveIt(10)
+        
+    private method SolveIt(steps as int) as int64
         var count := 0
-        do while count < 10
+        do while count < steps
             var pairs := List<string> {}
             var i := 0
+            var polyChar := _poly.ToCharArray()
             do while i < _poly.Length - 1
-                var polyChar := _poly.ToCharArray()
                 pairs.Add(polyChar[i].ToString() + polyChar[i+1].ToString())
                 i++
             end do
-            var newPoly := ""
+            var newPoly := StringBuilder {}
             foreach var pair in pairs
                 if _Data:TryGetValue(pair, out var val)
-                    var polyChar := pair.ToCharArray()
-                    newPoly += polyChar[0].ToString() + val
+                    polyChar := pair.ToCharArray()
+                    newPoly.Append(polyChar[0].ToString() + val)
                 endif
             next
             count ++
-            _poly := newPoly + _poly.Last().ToString()
+            _poly := newPoly.ToString() + _poly.Last().ToString()
+            Console.WriteLine(i"{count}: {_poly.Length}")
         end do
-        return _poly // Use the _Data field to solve the 1th puzzle and return the result
+        var chars := _poly.Select({x => x}).Distinct().ToList()
+        var totals := Dictionary<char,int64>{}
+        foreach var chr in chars
+            totals.Add(chr,_poly.Count({x => chr.Equals(x)}))
+        next
+        var totalsOrdered := totals.OrderBy({x => x.Value})
+        var min := totalsOrdered.First().Value
+        var max := totalsOrdered.Last().Value
+        return max - min // Use the _Data field to solve the 1th puzzle and return the result
     
     protected override method Solve2() as object
-        return nil // Use the _Data field to solve the 1th puzzle and return the result
+        return self:SolveIt(40)
 
 end class
