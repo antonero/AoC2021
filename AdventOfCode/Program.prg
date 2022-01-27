@@ -6,7 +6,7 @@ using System.Text
 function Start() as void strict
     
     // Initialze the Runner for a DaySolver. To run the Solver for the 1 day, use the Day01Sovler
-    var runner := SolverConsoleRummer<Day14Solver>{}
+    var runner := SolverConsoleRummer<Day21Solver>{}
     
     // Execute the Solver
     runner.Run()
